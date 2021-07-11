@@ -2,7 +2,7 @@
 Scripts created for proxy or VPN access in MOFO Linux version 8
 
 #### algo-controller.sh:
-Requires Algo VPN and associated Python3 dependencies.  Sets up the initial Algo management interface to start, stop, or check dependencies.
+Requires [Algo VPN](https://github.com/trailofbits/algo) and associated Python3 dependencies.  Sets up the initial Algo management interface to start, stop, or check dependencies.
 
 #### freenet-installer.sh:
 Requires Freenet java installer package.  Presents a menu from which a user will install or decline to install the Freenet peer-to-peer platform for censorship-resistant communication.
