@@ -8,16 +8,16 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 check_dependencies(){
-x-terminal-emulator -e 'sh -c  "cd /opt/streisand/ && ./util/venv-dependencies.sh ./venv && read line"'
+x-terminal-emulator -e sh -c  "cd /opt/streisand/ && ./util/venv-dependencies.sh ./venv && read line"
 }
 
 createkeys(){
-x-terminal-emulator -e 'sh -c  "ssh-keygen && read line"'
+x-terminal-emulator -e sh -c  "ssh-keygen && read line"
 }
 
 runstreisand(){
 source "/opt/streisand/env/bin/activate"
-x-terminal-emulator -e 'sh -c  "cd /opt/streisand/ && ./streisand && read line"'
+x-terminal-emulator -e sh -c  "cd /opt/streisand/ && ./streisand && read line"
 }
 
 getout(){
