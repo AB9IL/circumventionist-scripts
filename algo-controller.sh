@@ -8,15 +8,15 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 check_dependencies(){
-x-terminal-emulator -e 'sh -c  "cd /opt/algo/ && python3 -m virtualenv --python=`which python3` envs && read line"'
+x-terminal-emulator -e sh -c  "cd /opt/algo/ && python3 -m virtualenv --python=`which python3` envs && read line"
 source "/opt/algo/.env/bin/activate" 
-x-terminal-emulator -e 'sh -c "cd /opt/algo/ && python3 -m pip install -r requirements.txt && read line"'
+x-terminal-emulator -e sh -c "cd /opt/algo/ && python3 -m pip install -r requirements.txt && read line"
 }
 
 runalgo(){
 python -m virtualenv --python=`which python3` env
 source "/opt/algo/.env/bin/activate"
-x-terminal-emulator -e 'sh -c  "cd /opt/algo/ && ./algo && read line"'
+x-terminal-emulator -e sh -c  "cd /opt/algo/ && ./algo && read line"
 }
 
 getout(){
