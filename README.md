@@ -1,5 +1,5 @@
 # MOFO-Linux-v8
-Scripts created for proxy or VPN access in MOFO Linux version 8
+Scripts created for proxy or VPN access in [MOFO Linux version 8](https://mofolinux.com)
 
 #### algo-controller.sh:
 Requires [Algo VPN](https://github.com/trailofbits/algo) and associated Python3 dependencies.  Sets up the initial Algo management interface to start, stop, or check dependencies.
