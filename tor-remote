@@ -1,0 +1,98 @@
+#!/bin/bash
+
+# Copyright (c) 2022 by Philip Collier, github.com/AB9IL
+# This script is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version. There is NO warranty; not even for
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Encoding=UTF-8
+# config file format: standard openssh config syntax.  Use the
+# actual file ~/.ssh/config or a different one in the same format.
+CONFIGFILE="$HOME/.ssh/config"
+
+ROFI_COMMAND1='rofi -dmenu -p Select -lines 3'
+FZF_COMMAND1='fzf --layout=reverse --header=Select:'
+ROFI_COMMAND2='rofi -dmenu -p Select'
+FZF_COMMAND2='fzf --layout=reverse --header=Select:'
+FZF_COMMAND3="vim $CONFIGFILE"
+ROFI_COMMAND3="x-terminal-emulator -e vim $CONFIGFILE"
+
+edit_data(){
+    $COMMAND3
+}
+
+showhelp(){
+echo -e "\nRemote Tor connection manager.
+
+Connect to a remote Tor instance through an SSH tunnel.
+
+Note:  You MUST set up key based logins on the servers
+        AND have Tor installed on the server.
+
+Usage: $0 <option>
+Options:    gui     Graphical user interface.
+            --help  This help screen.\n"
+}
+
+start_tor_connection(){
+    export https_proxy="https://127.0.0.1:9050"
+    export HTTPS_PROXY="https://127.0.0.1:9050"
+    export http_proxy="http://127.0.0.1:9050"
+    export HTTP_PROXY="http://127.0.0.1:9050"
+    export socks4_proxy="http://127.0.0.1:9050"
+    export SOCKS4_PROXY="http://127.0.0.1:9050"
+    export socks5_proxy="http://127.0.0.1:9050"
+    export SOCKS5_PROXY="http://127.0.0.1:9050"
+    export NO_PROXY='localhost, 127.0.0.1'
+    export no_proxy='localhost, 127.0.0.1'
+    CHOICE="$(grep -E '^Host \w' $CONFIGFILE | awk '{print $2}' | $COMMAND2 )"
+    [[ -z "$CHOICE" ]] && echo "No selection..." && exit 1
+    [[ -z "$CHOICE" ]] || ssh -L 9050:127.0.0.1:9050 $CHOICE
+    exit 0
+}
+
+stop_tor_connection(){
+    export https_proxy=
+    export HTTPS_PROXY=
+    export http_proxy=
+    export HTTP_PROXY=
+    export socks4_proxy=
+    export SOCKS4_PROXY=
+    export socks5_proxy=
+    export SOCKS5_PROXY=
+    export NO_PROXY=
+    export no_proxy=
+kill "$(ps -aux | grep ssh | head -1 | awk '{printf $2}')"
+sleep 0.2
+kill "$(ps -aux | grep ssh | head -1 | awk '{printf $2}')"
+exit 0
+}
+
+case "$1" in
+    "")
+        COMMAND1=$FZF_COMMAND1
+        COMMAND2=$FZF_COMMAND2
+        COMMAND3=$FZF_COMMAND3
+        ;;
+    "gui")
+        COMMAND1=$ROFI_COMMAND1
+        COMMAND2=$ROFI_COMMAND2
+        COMMAND3=$ROFI_COMMAND3
+        ;;
+    *)
+        showhelp
+        ;;
+esac
+
+OPTIONS="Connect Tor Remote
+Edit your server data
+Disconnect Tor Remote"
+
+# Take the choice; exit if no answer matches options.
+REPLY="$(echo -e "$OPTIONS" | $COMMAND1 )"
+
+[[  "$REPLY" == "Connect Tor Remote" ]] && start_tor_connection
+[[  "$REPLY" == "Edit your server data" ]] && edit_data
+[[  "$REPLY" == "Disconnect Tor Remote" ]] && stop_tor_connection
