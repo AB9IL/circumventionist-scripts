@@ -21,3 +21,6 @@ Requires [StreisandEffect/streisand](https://github.com/StreisandEffect/streisan
 
 #### tor-controller.sh:
 Requires Tor, Proxychains4, Torsocks, Obfs4proxy.  Manage combined usage of Tor with extra obfuscation methods and circumvent measures preventing access to the Tor network.
+
+#### tor-remote:
+Requires ssh access to a server which has Tor running. Connect and disconnect to the remote server, which will provide unblocked and anonymous internet via Tor. You should configure your local system for key based ssh access to the server. Also, configure your web browser for proxy access through localhost and port 9050.  Tor-remote will forward traffic on port 9050  through the remote server.
