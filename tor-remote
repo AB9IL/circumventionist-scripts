@@ -49,7 +49,8 @@ start_tor_connection(){
     export no_proxy='localhost, 127.0.0.1'
     CHOICE="$(grep -E '^Host \w' $CONFIGFILE | awk '{print $2}' | $COMMAND2 )"
     [[ -z "$CHOICE" ]] && echo "No selection..." && exit 1
-    [[ -z "$CHOICE" ]] || ssh -L 9050:127.0.0.1:9050 $CHOICE
+    [[ -z "$CHOICE" ]] || while ! ssh -L 9050:127.0.0.1:9050 $CHOICE; \
+        do sleep; done
     exit 0
 }
 
