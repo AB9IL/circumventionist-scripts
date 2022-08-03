@@ -47,14 +47,17 @@ start_tor_connection(){
     export SOCKS5_PROXY="http://127.0.0.1:9050"
     export NO_PROXY='localhost, 127.0.0.1'
     export no_proxy='localhost, 127.0.0.1'
-    CHOICE="$(grep -E '^Host \w' $CONFIGFILE | awk '{print $2}' | $COMMAND2 )"
+    export CHOICE="$(grep -E '^Host \w' $CONFIGFILE | awk '{print $2}' | $COMMAND2 )"
     [[ -z "$CHOICE" ]] && echo "No selection..." && exit 1
-    [[ -z "$CHOICE" ]] || while ! ssh -L 9050:127.0.0.1:9050 $CHOICE; \
-        do sleep; done
+    # set the proxy flag if a choice is made
+    [[ -z "$CHOICE" ]] || touch /tmp/proxyflag && \
+        while ! ssh -L 9050:127.0.0.1:9050 $CHOICE; do sleep; done
+    stop_tor_connection
     exit 0
 }
 
 stop_tor_connection(){
+    rm /tmp/proxyflag
     export https_proxy=
     export HTTPS_PROXY=
     export http_proxy=
