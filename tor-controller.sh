@@ -9,6 +9,10 @@
 
 Encoding=UTF-8
 
+# define the web browser
+#startbrowser="forefox"
+startbrowser="vivaldi"
+
 torobfs4(){
 export https_proxy=127.0.0.1:9050
 export HTTPS_PROXY=127.0.0.1:9050
@@ -36,14 +40,18 @@ systemctl enable tor.service
 sleep 4
 systemctl start tor.service
 sleep 4
-proxychains4 x-www-browser --new-window "https://check.torproject.org" &
+x-www-browser --new-window "https://check.torproject.org" &
 }
 
-remote_proxychains(){
-
+remote_tor(){
 x-terminal-emulator -e "tor-remote" &
-sleep 4
-x-www-browser --proxy-server="socks5://127.0.0.1:9050" --new-window "https://check.torproject.org" &
+# wait for user to make a choice
+while ! [[ -f "/tmp/proxyflag" ]]; do
+    sleep 1
+done
+sleep 1
+$startbrowser --proxy-server="socks5://127.0.0.1:9050" \
+    --new-window "https://check.torproject.org"
 }
 
 torstop(){
@@ -72,9 +80,9 @@ x-terminal-emulator -e sh -c "fzproxy --anonymity=\"elite\";" && \
     sudo tee -a /etc/proxychains4.conf
 }
 
-OPTIONS="Start Tor and use Obfs4 or Scramblesuit
+OPTIONS="Tor-Remote to a distant server
+Start Tor and use Obfs4 or Scramblesuit
 Start Tor and use Proxychains
-Tor-Remote to a distant server
 Update Proxy List
 Stop Tor"
 
@@ -95,6 +103,6 @@ then VPN or SSH or Proxy into that server.")"
             --add-entry="Enter Pluggable Transport Data:") && \
 		torobfs4
 [[ "$REPLY" == "Start Tor and use Proxychains" ]] && torproxychains
-[[ "$REPLY" == "Tor-Remote to a distant server" ]] && remote_proxychains
+[[ "$REPLY" == "Tor-Remote to a distant server" ]] && remote_tor
 [[ "$REPLY" == "Update Proxy List" ]] && update_proxylist
 [[ "$REPLY" == "Stop Tor" ]] && torstop
