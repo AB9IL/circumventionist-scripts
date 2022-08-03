@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2021 by Philip Collier, <webmaster@mofolinux.com>
+# Copyright (c) 2021 by Philip Collier, github.com/AB9IL
 # This script is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or
@@ -31,6 +31,7 @@ torsocks x-www-browser --new-window "https://check.torproject.org" &
 }
 
 torproxychains(){
+touch /tmp/proxyflag
 systemctl enable tor.service
 sleep 4
 systemctl start tor.service
@@ -38,7 +39,16 @@ sleep 4
 proxychains4 x-www-browser --new-window "https://check.torproject.org" &
 }
 
+remote_proxychains(){
+
+x-terminal-emulator -e "tor-remote" &
+sleep 4
+x-www-browser --proxy-server="socks5://127.0.0.1:9050" --new-window "https://check.torproject.org" &
+}
+
 torstop(){
+rm /tmp/proxyflag
+sudo sed -i '/^### FZPROXY.*/q' /etc/proxychains4.conf
 export https_proxy=
 export HTTPS_PROXY=
 export http_proxy=
@@ -64,15 +74,16 @@ x-terminal-emulator -e sh -c "fzproxy --anonymity=\"elite\";" && \
 
 OPTIONS="Start Tor and use Obfs4 or Scramblesuit
 Start Tor and use Proxychains
+Tor-Remote to a distant server
 Update Proxy List
 Stop Tor"
 
 # Take the choice; exit if no answer matches options.
 REPLY="$(echo -e "$OPTIONS" | rofi \
     -dmenu -p "Tor - Select Action" \
-    -lines 4 \
+    -lines 5 \
     -mesg "Manage Local Tor connections.  You should
-consider running Tor on a remote server, 
+consider running Tor on a remote server,
 then VPN or SSH or Proxy into that server.")"
 
 [[ -z "$REPLY" ]] && exit 1
@@ -84,5 +95,6 @@ then VPN or SSH or Proxy into that server.")"
             --add-entry="Enter Pluggable Transport Data:") && \
 		torobfs4
 [[ "$REPLY" == "Start Tor and use Proxychains" ]] && torproxychains
+[[ "$REPLY" == "Tor-Remote to a distant server" ]] && remote_proxychains
 [[ "$REPLY" == "Update Proxy List" ]] && update_proxylist
-[[  "$REPLY" == "Stop Tor" ]] && torstop
+[[ "$REPLY" == "Stop Tor" ]] && torstop
