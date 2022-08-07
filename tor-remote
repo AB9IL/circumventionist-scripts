@@ -7,6 +7,9 @@
 # (at your option) any later version. There is NO warranty; not even for
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
+# The file /tmp/session_proxy is used as a work-around because proxychains
+# is FUBAR when using browsers based on Chrome.
+
 Encoding=UTF-8
 # config file format: standard openssh config syntax.  Use the
 # actual file ~/.ssh/config or a different one in the same format.
@@ -37,6 +40,9 @@ Options:    gui     Graphical user interface.
 }
 
 start_tor_connection(){
+    touch /tmp/proxyflag
+    sudo sed -i 's/^### FZPROXY.*/### FZPROXY\nsocks5 127.0.0.1 9050/;' /etc/proxychains4.conf
+    echo 'socks5://127.0.0.1:9050' > /tmp/session_proxy
     export https_proxy="https://127.0.0.1:9050"
     export HTTPS_PROXY="https://127.0.0.1:9050"
     export http_proxy="http://127.0.0.1:9050"
@@ -49,7 +55,7 @@ start_tor_connection(){
     export no_proxy='localhost, 127.0.0.1'
     export CHOICE="$(grep -E '^Host \w' $CONFIGFILE | awk '{print $2}' | $COMMAND2 )"
     [[ -z "$CHOICE" ]] && echo "No selection..." && exit 1
-    # set the proxy flag if a choice is made
+    # set the proxy flag after a choice is made
     [[ -z "$CHOICE" ]] || touch /tmp/proxyflag && \
         while ! ssh -L 9050:127.0.0.1:9050 $CHOICE; do sleep; done
     stop_tor_connection
@@ -58,6 +64,7 @@ start_tor_connection(){
 
 stop_tor_connection(){
     rm /tmp/proxyflag
+    sudo sed -i '/^### FZPROXY.*/q;' /etc/proxychains4.conf
     export https_proxy=
     export HTTPS_PROXY=
     export http_proxy=
