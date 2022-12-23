@@ -4,6 +4,9 @@ Scripts created for proxy or VPN access in [MOFO Linux version 8](https://mofoli
 #### algo-controller.sh:
 Requires [Algo VPN](https://github.com/trailofbits/algo) and associated Python3 dependencies.  Sets up the initial Algo management interface to start, stop, or check dependencies.
 
+#### dl-vpngate:
+Requires Python3 and Zenity.  Bulk downloads configs for OpenVPN connections from VPN Gate.  If VPN Gate is blocked in your country, use another circumvention tool to access the server. Once you can reach VPN Gate, this script gets you a truckload of ovpn files, and some of them should work!
+
 #### freenet-installer.sh:
 Requires Freenet java installer package.  Presents a menu from which a user will install or decline to install the Freenet peer-to-peer platform for censorship-resistant communication.
 
@@ -11,7 +14,7 @@ Requires Freenet java installer package.  Presents a menu from which a user will
 Requires Invisible Internet Project i2prouter package.  Start or stop i2prouter and configure proxy settings for other applications.
 
 #### menu-vpngate:
-Requires [DaveGallant/VPNGate](https://github.com/davegallant/vpngate) application.  Presents a menu of options for users of VPNGate: update the VPN server list, connect, disconnect, etc.
+Requires [DaveGallant/VPNGate](https://github.com/davegallant/vpngate) application.  Presents a menu of options for users of VPN Gate: update the VPN server list, connect, disconnect, etc.
 
 #### openvpn-controller.sh:
 Requires OpenVPN and VPNGate (see menu-vpngate).  Easy user interface for starting or stopping OpenVPN connections or switching to the above menu-vpngate.
