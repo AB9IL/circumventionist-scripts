@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+
+import base64
+import os
+import subprocess
+import sys
+
+import requests
+
+dest_folder = os.environ['HOME'] + "/Downloads"
+conf_quantity = int(sys.argv[1])+1
+url = "https://www.vpngate.net/api/iphone/"
+get = requests.get(url)
+try:
+    for count in range(1, conf_quantity):
+        ip = get.text.split('\n')[count+1].split(',')[1]
+        confdata = get.text.split('\n')[count+1].split(',')[6]
+        decode = base64.b64decode(get.text.split(',,')[count].split('\n')[0])
+        outputfile = confdata+"_"+ip+'.ovpn'
+        file_path = os.path.join(dest_folder, outputfile)
+        with open(file_path, "wb") as f:
+            f.write(decode)
+except IndexError:
+    print("Something went wrong.")
+
+cmd = ["zenity --info --height 100 --width 350 --title='Download from VPN Gate' \
+       --text='Task complete.\nFind OpenVPN configs in \n~/Downloads.' &"]
+subprocess.call(cmd, shell=True)
+print("Task complete. Find your OpenVPN configs in " + dest_folder + ".")
