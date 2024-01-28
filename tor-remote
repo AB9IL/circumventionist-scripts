@@ -41,7 +41,6 @@ Options:    gui     Graphical user interface.
 }
 
 start_tor_connection(){
-    touch /tmp/proxyflag
     sudo sed -i 's/^### FZPROXY.*/### FZPROXY\nsocks5 127.0.0.1 9050/;' /etc/proxychains4.conf
     export https_proxy="https://127.0.0.1:9050"
     export HTTPS_PROXY="https://127.0.0.1:9050"
@@ -56,14 +55,13 @@ start_tor_connection(){
     export CHOICE="$(grep -E '^Host \w' $CONFIGFILE | awk '{print $2}' | $COMMAND2 )"
     [[ -z "$CHOICE" ]] && echo "No selection..." && stop_tor_connection && exit 1
     # set the proxy flag if a choice is made
-    [[ -z "$CHOICE" ]] || touch /tmp/proxyflag && \
+    [[ -z "$CHOICE" ]] || echo "$CHOICE" > /tmp/proxyflag && \
         while ! ssh -L 9050:127.0.0.1:9050 -t -t $CHOICE; do sleep; done
     stop_tor_connection
     exit 0
 }
 
 stop_tor_connection(){
-    rm /tmp/proxyflag
     sudo sed -i '/^### FZPROXY.*/q;' /etc/proxychains4.conf
     export https_proxy=
     export HTTPS_PROXY=
@@ -75,10 +73,14 @@ stop_tor_connection(){
     export SOCKS5_PROXY=
     export NO_PROXY=
     export no_proxy=
-kill "$(ps -aux | grep "ssh -L" | head -1 | awk '{printf $2}')"
-sleep 0.2
-kill "$(ps -aux | grep "ssh -L" | head -1 | awk '{printf $2}')"
-exit 0
+    k="$(pgrep "ssh")"
+    #read -r SERVER < /tmp/proxyflag
+    for process in ${k[@]};do
+        #sudo pkill -f "ssh -L 9050:127.0.0.1:9050 -t -t $SERVER"
+        sudo killall -g ssh
+    done
+    rm /tmp/proxyflag
+    exit 0
 }
 
 case "$1" in
