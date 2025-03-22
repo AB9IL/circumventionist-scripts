@@ -1,27 +1,30 @@
 #!/bin/bash
 
-# Copyright (c) 2021 by Philip Collier, <webmaster@mofolinux.com>
+# Copyright (c) 2023 by Philip Collier, <webmaster@mofolinux.com>
 # This script is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or
 # (at your option) any later version. There is NO warranty; not even for
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
+# Run this script as root (use sudo).
+
 Encoding=UTF-8
 
 startopenvpn(){
-sudo killall openvpn
-file=$(zenity --file-selection --title="Select an *.ovpn File" --filename=$HOME/openvpn/)
-sudo x-termiinal-emulator -e "sh -c 'openvpn --config $file'"&
+[[ "$(pgrep openvpn)" ]] && killall openvpn
+fd -a -d 3 -t file -e ovpn . | \
+rofi -dmenu -p "Select an *.ovpn File" | \
+xargs -I{} openvpn --config "{}"
 }
 
 vpngate(){
-sudo killall openvpn
+killall openvpn
 sh -c "menu-vpngate"
 }
 
 stopopenvpn(){
-sudo killall openvpn
+[[ "$(pgrep openvpn)" ]] && killall openvpn
 exit
 }
 
@@ -32,7 +35,7 @@ Stop OpenVPN"
 # Take the choice; exit if no answer matches options.
 REPLY="$(echo -e "$OPTIONS" | rofi \
     -dmenu -p "OpenVPN - Select Action" \
-    -lines 3 \
+    -l 3 \
     -mesg "Manage OpenVPN connections.")"
 
 [[ -z "$REPLY" ]] && echo "something went wrong" && exit 1

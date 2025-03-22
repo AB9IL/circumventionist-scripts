@@ -8,15 +8,11 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 check_dependencies(){
-x-terminal-emulator -e sh -c  "cd /opt/algo/ && python3 -m virtualenv --python=`which python3` envs && read line"
-source "/opt/algo/.env/bin/activate" 
-x-terminal-emulator -e sh -c "cd /opt/algo/ && python3 -m pip install -r requirements.txt && read line"
+    x-terminal-emulator -e sh -c  "cd /opt/algo/ && python3 -m virtualenv --python=$(which python3) .env && read line && source /opt/algo/.env/bin/activate && cd /opt/algo/ && python3 -m pip install -r requirements.txt && read line"
 }
 
 runalgo(){
-python -m virtualenv --python=`which python3` env
-source "/opt/algo/.env/bin/activate"
-x-terminal-emulator -e sh -c  "cd /opt/algo/ && ./algo && read line"
+    x-terminal-emulator -e sh -c  "python -m virtualenv --python=(which python3) .env && source /opt/algo/.env/bin/activate && cd /opt/algo/ && ./algo && read line"
 }
 
 getout(){
@@ -24,14 +20,22 @@ deactivate
 exit
 }
 
+readfiles(){
+   FILE="$(fd . "/opt/algo" -e md | \
+        rofi -dmenu -p "Select File to read" \
+        -mesg "Read one of these")"
+        [[ -z "${FILE}" ]] || glow-wrapper "${FILE}"
+}
+
 OPTIONS="Run Algo
+Stop Algo
 Check Dependencies
-Stop Algo"
+Open README files"
 
 # Take the choice; exit if no answer matches options.
 REPLY="$(echo -e "$OPTIONS" | rofi \
-    -lines 4 \
-    -dmenu -p "OpenVPN - Select Action" \
+    -l 4 \
+    -dmenu -p "Select Action" \
     -mesg "Set up and run a VPN on your own server.
 Note: You should backup your SSH keys and server
 credentials to a safe place off of this system.
@@ -39,5 +43,6 @@ See the README files in /opt/algo for more
 information.")"
 
 [[  "$REPLY" == "Run Algo" ]] && runalgo
-[[  "$REPLY" == "Check Dependencies" ]] && check_dependencies
 [[  "$REPLY" == "Stop Algo" ]] && getout
+[[  "$REPLY" == "Check Dependencies" ]] && check_dependencies
+[[  "$REPLY" == "Open README files" ]] && readfiles

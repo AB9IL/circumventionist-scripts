@@ -12,7 +12,7 @@ Encoding=UTF-8
 # actual file ~/.ssh/config or a different one in the same format.
 CONFIGFILE="$HOME/.ssh/config"
 
-ROFI_COMMAND1='rofi -dmenu -p Select -lines 3'
+ROFI_COMMAND1='rofi -dmenu -p Select -l 3'
 FZF_COMMAND1='fzf --layout=reverse --header=Select:'
 ROFI_COMMAND2='rofi -dmenu -p Select'
 FZF_COMMAND2='fzf --layout=reverse --header=Select:'
@@ -32,8 +32,8 @@ Note 1:  You MUST set up key based logins on the servers
          AND have Tor installed on the server.
 
 Note 2:  Use proxychains to wrap your internet-using apps.
-         (This is already set up for firefox if using
-         the Firefox-with-proxy script.
+         (This is already set up for Firefox, Vivaldi, or 
+         Brave if using the <browser>-with-proxy script.)
 
 Usage: $0 <option>
 Options:    gui     Graphical user interface.

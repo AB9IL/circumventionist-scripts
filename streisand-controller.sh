@@ -25,22 +25,31 @@ deactivate
 exit
 }
 
+readfiles(){
+   FILE="$(fd . "/opt/streisand" -e md | \
+        rofi -dmenu -p "Select File to read" \
+        -mesg "Read one of these")"
+        [[ -z "${FILE}" ]] || glow-wrapper "${FILE}"
+}
+
 OPTIONS="Run Streisand
+Stop Streisand
 Check Dependencies
 Create an SSH key pair
-Stop Streisand"
+Open README files"
 
 # Take the choice; exit if no answer matches options.
 REPLY="$(echo -e "$OPTIONS" | rofi \
-    -lines 4 \
-    -dmenu -p "OpenVPN - Select Action" \
+    -l 5 \
+    -dmenu -p "Select Action" \
     -mesg "Set up and run a VPN on your own server.
-Note: You should backup your SSH keys and server 
+Note: You should backup your SSH keys and server
 credentials to a safe place off of this system.
-See the README files in /opt/streisand for more
-information.")"
+See the README files for more information.")"
 
 [[  "$REPLY" == "Run Streisand" ]] && runstreisand
+[[  "$REPLY" == "Stop Streisand" ]] && getout
 [[  "$REPLY" == "Check Dependencies" ]] && check_dependencies
 [[  "$REPLY" == "Create an SSH key pair" ]] && createkeys
-[[  "$REPLY" == "Stop Streisand" ]] && getout
+[[  "$REPLY" == "Open README files" ]] && readfiles
+

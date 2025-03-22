@@ -7,23 +7,20 @@
 # (at your option) any later version. There is NO warranty; not even for
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-# The file /tmp/session_proxy is used as a work-around because proxychains
-# is FUBAR when using browsers based on Chrome.
-
 args="$1 $2"
 
 run_proxied() {
     # operate in proxied mode
-    vivaldi --proxy-server="$(cat /tmp/session_proxy)" --new-tab ${args} &
+    proxychains4 firefox --new-tab $args &
     exit 0
 }
 
 run_clear() {
     # operate without proxychains
-    vivaldi ${args} &
+    firefox --new-tab $args &
     exit 0
 }
 
-[[ -f "/tmp/proxyflag" ]] &&  COMMAND="run_proxied"
-[[ ! -f "/tmp/proxyflag" ]] &&  COMMAND="run_clear"
+[ -f "/tmp/proxyflag" ] &&  COMMAND="run_proxied"
+[ ! -f "/tmp/proxyflag" ] &&  COMMAND="run_clear"
 $COMMAND

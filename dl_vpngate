@@ -8,7 +8,12 @@ import sys
 import requests
 
 dest_folder = os.environ['HOME'] + "/Downloads"
-conf_quantity = int(sys.argv[1])+1
+try:
+    conf_quantity = int(sys.argv[1])+1
+except Exception:
+    print("No number given; defaulting to 5 configs")
+    print("Usage: " + sys.argv[0] + " <integer>")
+    conf_quantity = 6
 url = "https://www.vpngate.net/api/iphone/"
 get = requests.get(url)
 try:
@@ -18,12 +23,18 @@ try:
         decode = base64.b64decode(get.text.split(',,')[count].split('\n')[0])
         outputfile = confdata+"_"+ip+'.ovpn'
         file_path = os.path.join(dest_folder, outputfile)
-        with open(file_path, "wb") as f:
-            f.write(decode)
+        try:
+            with open(file_path, "wb") as f:
+                f.write(decode)
+        except Exception:
+            print("Could not write files.")
+            quit()
+
 except IndexError:
     print("Something went wrong.")
+    quit()
 
-cmd = ["zenity --info --height 100 --width 350 --title='Download from VPN Gate' \
+cmd = ["yad --info --height 100 --width 350 --title='Download from VPN Gate' \
        --text='Task complete.\nFind OpenVPN configs in \n~/Downloads.' &"]
 subprocess.call(cmd, shell=True)
 print("Task complete. Find your OpenVPN configs in " + dest_folder + ".")

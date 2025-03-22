@@ -4,20 +4,21 @@ OPTION1="Connect to Listed Server"
 OPTION2="Connect to Random Server"
 OPTION3="Disconnect"
 OPTION4="View the Server List"
+OPTION5="View the README"
 
-OPTIONS="$OPTION1\n$OPTION2\n$OPTION3\n$OPTION4"
+OPTIONS="$OPTION1\n$OPTION2\n$OPTION3\n$OPTION4\n$OPTION5"
 
 
-SELECTED="$(echo -e "$OPTIONS" | rofi -lines 5 -dmenu -p "VPNGate")"
+SELECTED="$(echo -e "$OPTIONS" | rofi -l 5 -dmenu -p "VPNGate")"
 
 case $SELECTED in
   $OPTION1)
     # connect to server in the list
-    x-terminal-emulator -e bash -c "sudo vpngate connect; read line"
+    x-terminal-emulator -e sh -c "sudo vpngate connect; read line"
 	;;
   $OPTION2)
     # connect to server a server selected randomly from the list
-    x-terminal-emulator -e bash -c "sudo vpngate connect --random; read line"
+    x-terminal-emulator -e sh -c "sudo vpngate connect --random; read line"
 	;;
   $OPTION3)
     # disconnect
@@ -25,6 +26,10 @@ case $SELECTED in
     ;;
   $OPTION4)
     # view server list
-    x-terminal-emulator -e bash -c "vpngate list; read line"
+    x-terminal-emulator -e sh -c "vpngate list; read line"
+    ;;
+  $OPTION5)
+    # view readme file
+    x-terminal-emulator -e sh -c "glow -p /usr/local/src/vpngate/README.md; read line"
     ;;
 esac

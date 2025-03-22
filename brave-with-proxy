@@ -11,16 +11,17 @@
 # is FUBAR when using browsers based on Chrome.
 
 args="$1 $2"
+BROWSER="brave-browser-beta"
 
 run_proxied() {
     # operate in proxied mode
-    vivaldi --proxy-server="$(cat /tmp/session_proxy)" --new-tab ${args} &
+    ${BROWSER} --proxy-server="$(cat /tmp/session_proxy)" --new-tab ${args} &
     exit 0
 }
 
 run_clear() {
     # operate without proxychains
-    vivaldi ${args} &
+    ${BROWSER} ${args} &
     exit 0
 }
 
