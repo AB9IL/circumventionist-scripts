@@ -53,7 +53,8 @@ x-www-browser --new-tab "https://check.torproject.org" &
 
 remote_tor(){
 echo 'socks5://127.0.0.1:9050' > /tmp/session_proxy
-x-terminal-emulator -e "tor-remote" &
+tor-remote gui &
+# x-terminal-emulator -e "tor-remote" &
 # wait for user to make a choice
 while ! [[ -f "/tmp/proxyflag" ]]; do
     sleep 1

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2021 by Philip Collier, <webmaster@mofolinux.com>
+# Copyright (c) 2021 by Philip Collier, github.com/AB9IL
 # This script is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or
@@ -8,16 +8,16 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 check_dependencies(){
-x-terminal-emulator -e sh -c  "cd /opt/streisand/ && ./util/venv-dependencies.sh ./venv && read line"
+x-terminal-emulator -e bash -c  "cd /opt/streisand/ && ./util/venv-dependencies.sh ./venv && read line"
 }
 
 createkeys(){
-x-terminal-emulator -e sh -c  "ssh-keygen && read line"
+x-terminal-emulator -e bash -c  "ssh-keygen && read line"
 }
 
 runstreisand(){
 source "/opt/streisand/env/bin/activate"
-x-terminal-emulator -e sh -c  "cd /opt/streisand/ && ./streisand && read line"
+x-terminal-emulator -e bash -c  "cd /opt/streisand/ && ./streisand && read line"
 }
 
 getout(){

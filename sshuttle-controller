@@ -43,8 +43,7 @@ start_sshuttle(){
     [[ -z "$CHOICE" ]] && echo "No selection..." && exit 1
     stop_sshuttle
     [[ -f "$IPTABLES_BACKUP" ]] || sudo iptables-save > $IPTABLES_BACKUP; \
-    WINDOW=$(killall yad; yad --timeout=10 --height=30 --width=400 --no-buttons \
-        --text-align=center --fixed --text="Opening SSH Tunnel: $CHOICE") &
+        notify-send "Opening SSH Tunnel: $CHOICE" &
     sshuttle \
         --remote $CHOICE 0/0 \
         --ssh-cmd "ssh" \
@@ -88,7 +87,6 @@ REPLY="$(echo -e "$OPTIONS" | $COMMAND1 )"
 
 [[  "$REPLY" == "Start SSH tunneling" ]] && start_sshuttle
 [[  "$REPLY" == "Edit your server data" ]] && edit_data
-[[  "$REPLY" == "Stop SSH tunneling" ]] && stop_sshuttle && WINDOW=$(killall yad; \
-    yad --timeout=10 --height=30 --width=400 --no-buttons \
-    --text-align=center --fixed --text="Closing SSH Tunnels") &
+[[  "$REPLY" == "Stop SSH tunneling" ]] && stop_sshuttle && \
+    notify-send "Closing SSH Tunnels" &
 
