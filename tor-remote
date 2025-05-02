@@ -41,7 +41,8 @@ Options:    gui     Graphical user interface.
 }
 
 start_tor_connection(){
-    sudo sed -i 's/^### FZPROXY.*/### FZPROXY\nsocks5 127.0.0.1 9050/;' /etc/proxychains4.conf
+    sudo sed -i 's/^### FZPROXY.*/### FZPROXY\nsocks5 127.0.0.1 9050/; 
+        /### FZPROXY\nsocks5 127.0.0.1 9050/q' /etc/proxychains4.conf
     export https_proxy="https://127.0.0.1:9050"
     export HTTPS_PROXY="https://127.0.0.1:9050"
     export http_proxy="http://127.0.0.1:9050"
@@ -52,7 +53,8 @@ start_tor_connection(){
     export SOCKS5_PROXY="http://127.0.0.1:9050"
     export NO_PROXY='localhost, 127.0.0.1'
     export no_proxy='localhost, 127.0.0.1'
-    export CHOICE="$(grep -E '^Host \w' $CONFIGFILE | awk '{print $2}' | $COMMAND2 )"
+    CHOICE="$(grep -E '^Host \w' $CONFIGFILE | awk '{print $2}' | $COMMAND2 )"
+    export CHOICE
     [[ -z "$CHOICE" ]] && echo "No selection..." && stop_tor_connection && exit 1
     # set the proxy flag if a choice is made
     [[ -z "$CHOICE" ]] || echo "$CHOICE" > /tmp/proxyflag && \
@@ -62,7 +64,8 @@ start_tor_connection(){
 }
 
 stop_tor_connection(){
-    sudo sed -i '/^### FZPROXY.*/q;' /etc/proxychains4.conf
+    sudo sed -i 's/^### FZPROXY.*/### FZPROXY\nsocks5 127.0.0.1 9050/; 
+        /### FZPROXY\nsocks5 127.0.0.1 9050/q' /etc/proxychains4.conf
     export https_proxy=
     export HTTPS_PROXY=
     export http_proxy=

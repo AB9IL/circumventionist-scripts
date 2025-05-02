@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Element
+GenericName=Element: the future of secure communication
+Exec=element-web.sh
+Terminal=false
+Type=Application
+Icon=element-desktop
+Comment=Element: the future of secure communication
+Categories=Network;InstantMessaging;Chat;

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Telegram Web
+GenericName=Telegram messenger
+Exec=telegram-web.sh
+Icon=telegram
+Terminal=false
+Type=Application
+Categories=Chat;Network;InstantMessaging;
+Keywords=tg;chat;im;messaging;messenger;sms;

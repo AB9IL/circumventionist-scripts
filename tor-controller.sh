@@ -19,7 +19,8 @@ startbrowser="vivaldi"
 torobfs4(){
 echo 'socks5://127.0.0.1:9050' > /tmp/session_proxy
 touch /tmp/proxyflag
-sudo sed -i 's/^### FZPROXY.*/### FZPROXY\nsocks5 127.0.0.1 9050/;' /etc/proxychains4.conf
+sudo sed -i 's/^### FZPROXY.*/### FZPROXY\nsocks5 127.0.0.1 9050/; 
+    /### FZPROXY\nsocks5 127.0.0.1 9050/q' /etc/proxychains4.conf
 export https_proxy=127.0.0.1:9050
 export HTTPS_PROXY=127.0.0.1:9050
 export http_proxy=127.0.0.1:9050
@@ -43,7 +44,8 @@ torsocks x-www-browser --new-window "https://check.torproject.org" &
 torproxychains(){
 echo 'socks5://127.0.0.1:9050' > /tmp/session_proxy
 touch /tmp/proxyflag
-sudo sed -i 's/^### FZPROXY.*/### FZPROXY\nsocks5 127.0.0.1 9050/;' /etc/proxychains4.conf
+sudo sed -i 's/^### FZPROXY.*/### FZPROXY\nsocks5 127.0.0.1 9050/; 
+    /### FZPROXY\nsocks5 127.0.0.1 9050/q' /etc/proxychains4.conf
 systemctl enable tor.service
 sleep 4
 systemctl start tor.service
@@ -53,8 +55,7 @@ x-www-browser --new-tab "https://check.torproject.org" &
 
 remote_tor(){
 echo 'socks5://127.0.0.1:9050' > /tmp/session_proxy
-tor-remote gui &
-# x-terminal-emulator -e "tor-remote" &
+x-terminal-emulator -e "tor-remote" &
 # wait for user to make a choice
 while ! [[ -f "/tmp/proxyflag" ]]; do
     sleep 1
@@ -65,7 +66,9 @@ x-www-browser --new-tab "https://check.torproject.org" &
 
 torstop(){
 rm /tmp/proxyflag
-sudo sed -i '/^### FZPROXY.*/q' /etc/proxychains4.conf
+# force restoration for basic Tor in case other proxies were set
+sudo sed -i 's/^### FZPROXY.*/### FZPROXY\nsocks5 127.0.0.1 9050/; 
+    /### FZPROXY\nsocks5 127.0.0.1 9050/q' /etc/proxychains4.conf
 > /tmp/session_proxy
 export https_proxy=
 export HTTPS_PROXY=

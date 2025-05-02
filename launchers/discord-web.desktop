@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Discord
+GenericName=Discord Group Chat
+Exec=discord-web.sh
+Terminal=false
+Type=Application
+Icon=discord
+Comment=Group Chat
+Categories=Network;InstantMessaging;Chat;
