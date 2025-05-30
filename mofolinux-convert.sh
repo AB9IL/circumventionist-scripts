@@ -279,7 +279,7 @@ yamllint pypy3 dconf-editor net-tools blueman sqlite3 dbus-x11 obs-studio \
 filezilla htop fastfetch tmux kodi rofi proxychains4 sshuttle tor torsocks \
 obfs4proxy snowflake-client seahorse surfraw surfraw-extra usbreset libssl-dev \
 libcurl4-openssl-dev software-properties-common apt-transport-https \
-ca-certificates vivaldi-stable"
+ca-certificates vivaldi-stable squashfs-tools genisoimage syslinux-utils xorriso"
 for PKG in $PKGS; do apt --solver 3.0 --no-strict-pinning -y install $PKG; done
 
 # lsp-plugins should be hidden, but are not.
