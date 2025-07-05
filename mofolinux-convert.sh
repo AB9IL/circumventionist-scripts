@@ -31,7 +31,7 @@
 ###############################################################################
 # ROOT USER CHECK
 ###############################################################################
-SCRIPT_VERSION="0.3"
+SCRIPT_VERSION="0.4"
 echo -e "\nMOFO Linux Converter v$SCRIPT_VERSION"
 # exit if not root
 [[ $EUID -ne 0 ]] && echo -e "\nYou must be root to run this script." && exit
@@ -62,7 +62,7 @@ export USERNAME
 export ARCH="amd64"
 export ARCH2="x86_64"
 export BROWSER="vivaldi" # Browser can be any of: brave, firefox, vivaldi
-export GOTGPT_VER="2.9.2"
+export GOTGPT_VER="2.10.0"
 export I2PD_VER="2.56.0"
 export IPFS_VER="0.42.0"
 export OBSIDIAN_VER="1.8.9"
