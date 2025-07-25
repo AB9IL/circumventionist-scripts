@@ -31,7 +31,7 @@
 ###############################################################################
 # ROOT USER CHECK
 ###############################################################################
-SCRIPT_VERSION="0.4"
+SCRIPT_VERSION="0.5"
 echo -e "\nMOFO Linux Converter v$SCRIPT_VERSION"
 # exit if not root
 [[ $EUID -ne 0 ]] && echo -e "\nYou must be root to run this script." && exit
@@ -280,7 +280,7 @@ filezilla htop fastfetch tmux kodi rofi proxychains4 sshuttle tor torsocks \
 obfs4proxy snowflake-client seahorse surfraw surfraw-extra usbreset libssl-dev \
 libcurl4-openssl-dev software-properties-common apt-transport-https \
 ca-certificates vivaldi-stable squashfs-tools genisoimage syslinux-utils xorriso"
-for PKG in $PKGS; do apt --solver 3.0 --no-strict-pinning -y install $PKG; done
+for PKG in $PKGS; do apt --solver 3.0 --no-strict-pinning -y install "$PKG"; done
 
 # lsp-plugins should be hidden, but are not.
 # append code in the launchers
@@ -296,7 +296,7 @@ python3-neovim python3-ipython python3-pygame python3-scrapy python3-pyaudio \
 python3-selenium python3-venv python3-virtualenv python3-virtualenvwrapper \
 python3-nltk python3-numba python3-mypy python3-xmltodict python3-dask \
 python3-sqlalchemy python3-openssl"
-for PKG in $PKGS; do apt --solver 3.0 --no-strict-pinning -y install $PKG; done
+for PKG in $PKGS; do apt --solver 3.0 --no-strict-pinning -y install "$PKG"; done
 
 # use pip for packages not in the regular repos
 # execute as a loop so broken packages don't break the whole process
@@ -304,7 +304,7 @@ PKGS="pandas-datareader hq iq jq siphon sympad aria2p lastversion castero \
 jupyterlab jupyter-book jupyter-lsp jupytext cookiecutter bash_kernel ilua \
 types-seaborn pandas-stubs sounddevice nomadnet rns lxmf chunkmuncher"
 for PKG in $PKGS; do
-    python3 -m pip install --upgrade --break-system-packages $PKG
+    python3 -m pip install --upgrade --break-system-packages "$PKG"
 done
 
 # use pip for a beta version:
@@ -320,8 +320,8 @@ apt --solver 3.0 --no-strict-pinning -y install nodejs
 # Test with: nodejs --version
 
 # Use npm as the node package manager.
-PKGS="prettier eslint_d jsonlint markdownlint readability-cli"
-for PKG in $PKGS; do npm install -g $PKG; done
+PKGS="prettier @fsouza/prettierd eslint_d jsonlint markdownlint readability-cli"
+for PKG in $PKGS; do npm install -g "$PKG"; done
 
 # Update node and prune cruft with:
 npm update -g
@@ -549,7 +549,7 @@ libxfce* xfburn xfconf xfdesktop4 parole sway swaybg waybar greybird-gtk-theme \
 yelp timeshift dosbox grsync remmina wofi kwayland geoclue* \
 gnome-accessibility-themes gnome-desktop3-data gnome-icon-theme gnome-menus \
 gnome-settings-daemon gnome-settings-daemon-common gnome-system* systemsettings"
-for PKG in $PKGS; do sudo apt -y autoremove --purge $PKG; done
+for PKG in $PKGS; do sudo apt -y autoremove --purge "$PKG"; done
 
 # For Wayland / Sway
 # Sway Components to install:
