@@ -10,6 +10,7 @@
 Encoding=UTF-8
 # config file format: standard openssh config syntax.  Use the
 # actual file ~/.ssh/config or a different one in the same format.
+# Note: this script assumes key based ssh credentials.
 CONFIGFILE="$HOME/.ssh/config"
 
 ROFI_COMMAND1='rofi -dmenu -p Select -l 3'
@@ -58,7 +59,7 @@ start_tor_connection(){
     [[ -z "$CHOICE" ]] && echo "No selection..." && stop_tor_connection && exit 1
     # set the proxy flag if a choice is made
     [[ -z "$CHOICE" ]] || echo "$CHOICE" > /tmp/proxyflag && \
-        while ! ssh -L 9050:127.0.0.1:9050 -t -t $CHOICE; do sleep; done
+        sh -c "while ! ssh -L 9050:127.0.0.1:9050 -t $CHOICE; do sleep; done"
     stop_tor_connection
     exit 0
 }

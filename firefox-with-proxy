@@ -7,17 +7,22 @@
 # (at your option) any later version. There is NO warranty; not even for
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
+
 args="$1 $2"
+BROWSER="firefox"
+
+# If proxychains is available, use it. Otherwise, use torsocks.
+[ -z "$(which proxychains)" ] && PROXY="torsocks"|| PROXY="proxychains"
 
 run_proxied() {
     # operate in proxied mode
-    proxychains4 firefox --new-tab $args &
+    ${PROXY} ${BROWSER} --new-tab ${args} &
     exit 0
 }
 
 run_clear() {
-    # operate without proxychains
-    firefox --new-tab $args &
+    # operate without a proxy
+    ${BROWSER} --new-tab ${args} &
     exit 0
 }
 

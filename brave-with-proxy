@@ -7,11 +7,12 @@
 # (at your option) any later version. There is NO warranty; not even for
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-# The file /tmp/session_proxy is used as a work-around because proxychains
-# is FUBAR when using browsers based on Chrome.
 
 args="$1 $2"
 BROWSER="brave-browser-beta"
+
+# For Chromium-based browsers, use the --proxy-server argument.
+# Get the ip and port from /tmp/session_proxy
 
 run_proxied() {
     # operate in proxied mode
@@ -20,11 +21,11 @@ run_proxied() {
 }
 
 run_clear() {
-    # operate without proxychains
-    ${BROWSER} ${args} &
+    # operate without a proxy
+    ${BROWSER} --new-tab ${args} &
     exit 0
 }
 
-[[ -f "/tmp/proxyflag" ]] &&  COMMAND="run_proxied"
-[[ ! -f "/tmp/proxyflag" ]] &&  COMMAND="run_clear"
+[ -f "/tmp/proxyflag" ] &&  COMMAND="run_proxied"
+[ ! -f "/tmp/proxyflag" ] &&  COMMAND="run_clear"
 $COMMAND
