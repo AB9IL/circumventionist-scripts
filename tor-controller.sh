@@ -13,7 +13,7 @@
 Encoding=UTF-8
 
 # define the web browser. It should be the path to a browser "with proxy" switcher
-# script or linked through /etc/alternatives. Proxy / no proxy switching should 
+# script or linked through /etc/alternatives. Proxy / no proxy switching should
 # happen within that script (not this one).
 
 BROWSER="x-www-browser"
@@ -40,7 +40,7 @@ export no_proxy='localhost, 127.0.0.1'
 echo "UseBridges 1
 ClientTransportPlugin obfs3,obfs4,scramblesuit exec /usr/bin/obfs4proxy managed
 ClientTransportPlugin meek exec /usr/bin/meek-client
-Bridge ${bridgedata}" > /etc/torrc.d/10_bridges
+Bridge ${bridgedata}" | sudo tee -a /etc/torrc.d/10_bridges
 systemctl enable tor.service
 sleep 4
 systemctl start tor.service
@@ -65,7 +65,7 @@ echo "UseBridges 1
 ClientTransportPlugin snowflake exec /usr/bin/snowflake-client -url https://snowflake-broker.torproject.net/ -front www.google.com -ice stun:stun.l.google.com:19302,stun:stun.antisip.com:3478,stun:stun.bluesip.net:3478,stun:stun.dus.net:3478,stun:stun.epygi.com:3478,stun:stun.sonetel.com:3478,stun:stun.uls.co.za:3478,stun:stun.voipgate.com:3478,stun:stun.voys.nl:3478 -log /var/log/tor/snowflake-client.log
 Bridge snowflake 192.0.2.3:80 2B280B23E1107BB62ABFC40DDCC8824814F80A72
 Bridge snowflake 192.0.2.4:80 8838024498816A039FCBBAB14E6F40A0843051FA
-" > /etc/torrc.d/10_bridges
+" | sudo tee -a /etc/torrc.d/10_bridges
 systemctl enable tor.service
 sleep 4
 systemctl start tor.service
