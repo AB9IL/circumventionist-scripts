@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Comment=SSH Tunneling to a remote Tor instance.
+Name=Tor-Remote
+Exec=tor-remote gui
+Categories=Network;Internet;Networking;Privacy;tor;VPN;proxy;
+Icon=applications-internet
+NoDisplay=false
+StartupNotify=false
+Terminal=false
+TerminalOptions=
