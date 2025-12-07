@@ -44,7 +44,7 @@ export no_proxy='localhost, 127.0.0.1'
 echo "UseBridges 1
 ClientTransportPlugin obfs3,obfs4,scramblesuit exec /usr/bin/obfs4proxy managed
 ClientTransportPlugin meek exec /usr/bin/meek-client
-Bridge ${bridgedata}" > /etc/torrc.d/10_bridges
+Bridge ${bridgedata}" | sudo tee /etc/torrc.d/10_bridges
 systemctl enable tor.service
 sleep 4
 systemctl start tor.service
@@ -69,7 +69,7 @@ echo "UseBridges 1
 ClientTransportPlugin snowflake exec /usr/bin/snowflake-client -url https://snowflake-broker.torproject.net/ -front www.google.com -ice stun:stun.l.google.com:19302,stun:stun.antisip.com:3478,stun:stun.bluesip.net:3478,stun:stun.dus.net:3478,stun:stun.epygi.com:3478,stun:stun.sonetel.com:3478,stun:stun.uls.co.za:3478,stun:stun.voipgate.com:3478,stun:stun.voys.nl:3478 -log /var/log/tor/snowflake-client.log
 Bridge snowflake 192.0.2.3:80 2B280B23E1107BB62ABFC40DDCC8824814F80A72
 Bridge snowflake 192.0.2.4:80 8838024498816A039FCBBAB14E6F40A0843051FA
-" > /etc/torrc.d/10_bridges
+" | sudo tee /etc/torrc.d/10_bridges
 systemctl enable tor.service
 sleep 4
 systemctl start tor.service
@@ -146,7 +146,11 @@ Options:    --gui     Graphical user interface.
 # index of commands
 ROFI_COMMAND1='rofi \
     -dmenu -p Select \
-    -l 6'
+    -l 6 \
+    -mesg "Manage Local Tor connections.  You should
+consider running Tor on a remote server,
+then VPN or SSH or Proxy into that server."'
+
 FZF_COMMAND1='fzf --layout=reverse'
 
 case "$1" in

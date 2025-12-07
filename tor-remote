@@ -33,7 +33,7 @@ Note 1:  You MUST set up key based logins on the servers
          AND have Tor installed on the server.
 
 Note 2:  Use proxychains to wrap your internet-using apps.
-         (This is already set up for Firefox, Vivaldi, or 
+         (This is already set up for Firefox, Vivaldi, or
          Brave if using the <browser>-with-proxy script.)
 
 Usage: $0 <option>
@@ -42,7 +42,7 @@ Options:    gui     Graphical user interface.
 }
 
 start_tor_connection(){
-    sudo sed -i 's/^### FZPROXY.*/### FZPROXY\nsocks5 127.0.0.1 9050/; 
+    sudo sed -i 's/^### FZPROXY.*/### FZPROXY\nsocks5 127.0.0.1 9050/;
         /### FZPROXY\nsocks5 127.0.0.1 9050/q' /etc/proxychains4.conf
     export https_proxy="https://127.0.0.1:9050"
     export HTTPS_PROXY="https://127.0.0.1:9050"
@@ -59,13 +59,13 @@ start_tor_connection(){
     [[ -z "$CHOICE" ]] && echo "No selection..." && stop_tor_connection && exit 1
     # set the proxy flag if a choice is made
     [[ -z "$CHOICE" ]] || echo "$CHOICE" > /tmp/proxyflag && \
-        sh -c "while ! ssh -L 9050:127.0.0.1:9050 -t $CHOICE; do sleep; done"
+        sh -c "while ! ssh -L 9050:127.0.0.1:9050 -t $CHOICE; do sleep 4; done"
     stop_tor_connection
     exit 0
 }
 
 stop_tor_connection(){
-    sudo sed -i 's/^### FZPROXY.*/### FZPROXY\nsocks5 127.0.0.1 9050/; 
+    sudo sed -i 's/^### FZPROXY.*/### FZPROXY\nsocks5 127.0.0.1 9050/;
         /### FZPROXY\nsocks5 127.0.0.1 9050/q' /etc/proxychains4.conf
     export https_proxy=
     export HTTPS_PROXY=
