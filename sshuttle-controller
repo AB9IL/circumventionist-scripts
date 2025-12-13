@@ -23,12 +23,12 @@ FZF_COMMAND2='fzf --layout=reverse --header=Select:'
 FZF_COMMAND3="vim $CONFIGFILE"
 ROFI_COMMAND3="x-terminal-emulator -e vim $CONFIGFILE"
 
-edit_data(){
+edit_data() {
     $COMMAND3
 }
 
-showhelp(){
-echo -e "\nSSH Tunnel manager (using sshuttle).
+showhelp() {
+    echo -e "\nSSH Tunnel manager (using sshuttle).
 
 Note:  You MUST set up key based logins on the servers.
 
@@ -37,45 +37,45 @@ Options:    gui     Graphical user interface.
             --help  This help screen.\n"
 }
 
-start_sshuttle(){
+start_sshuttle() {
 
-    CHOICE="$(grep -E '^Host \w' $CONFIGFILE | awk '{print $2}' | $COMMAND2 )"
+    CHOICE="$(grep -E '^Host \w' "$CONFIGFILE" | awk '{print $2}' | $COMMAND2)"
     [[ -z "$CHOICE" ]] && echo "No selection..." && exit 1
     stop_sshuttle
-    [[ -f "$IPTABLES_BACKUP" ]] || sudo iptables-save > $IPTABLES_BACKUP; \
-        notify-send "Opening SSH Tunnel: $CHOICE" &
+    [[ -f "$IPTABLES_BACKUP" ]] || sudo iptables-save | sudo tee $IPTABLES_BACKUP
+    notify-send "Opening SSH Tunnel: $CHOICE" &
     sshuttle \
-        --remote $CHOICE 0/0 \
+        --remote "$CHOICE" 0/0 \
         --ssh-cmd "ssh" \
         --dns \
-	--pidfile="$PIDFILE" \
+        --pidfile="$PIDFILE" \
         --daemon &
 }
 
-stop_sshuttle(){
+stop_sshuttle() {
     [[ -f "$PIDFILE" ]] && rm "$PIDFILE"
     k="$(pgrep "sshuttle")"
-    for process in ${k[@]};do
-        pkill -15 $process
+    for process in ${k[@]}; do
+        pkill -15 "$process"
     done
     sudo pkill -f "/usr/bin/python3 /usr/bin/sshuttle"
-    [[ -f "$IPTABLES_BACKUP" ]] && sudo iptables-restore < "$IPTABLES_BACKUP"
+    [[ -f "$IPTABLES_BACKUP" ]] && sudo cat "$IPTABLES_BACKUP" | iptables-restore
 }
 
 case "$1" in
-    "")
-        COMMAND1=$FZF_COMMAND1
-        COMMAND2=$FZF_COMMAND2
-        COMMAND3=$FZF_COMMAND3
-        ;;
-    "gui")
-        COMMAND1=$ROFI_COMMAND1
-        COMMAND2=$ROFI_COMMAND2
-        COMMAND3=$ROFI_COMMAND3
-        ;;
-    *)
-        showhelp
-        ;;
+"")
+    COMMAND1=$FZF_COMMAND1
+    COMMAND2=$FZF_COMMAND2
+    COMMAND3=$FZF_COMMAND3
+    ;;
+"gui")
+    COMMAND1=$ROFI_COMMAND1
+    COMMAND2=$ROFI_COMMAND2
+    COMMAND3=$ROFI_COMMAND3
+    ;;
+*)
+    showhelp
+    ;;
 esac
 
 OPTIONS="Start SSH tunneling
@@ -83,10 +83,9 @@ Edit your server data
 Stop SSH tunneling"
 
 # Take the choice; exit if no answer matches options.
-REPLY="$(echo -e "$OPTIONS" | $COMMAND1 )"
+REPLY="$(echo -e "$OPTIONS" | $COMMAND1)"
 
-[[  "$REPLY" == "Start SSH tunneling" ]] && start_sshuttle
-[[  "$REPLY" == "Edit your server data" ]] && edit_data
-[[  "$REPLY" == "Stop SSH tunneling" ]] && stop_sshuttle && \
+[[ "$REPLY" == "Start SSH tunneling" ]] && start_sshuttle
+[[ "$REPLY" == "Edit your server data" ]] && edit_data
+[[ "$REPLY" == "Stop SSH tunneling" ]] && stop_sshuttle &&
     notify-send "Closing SSH Tunnels" &
-
