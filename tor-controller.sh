@@ -12,15 +12,6 @@
 
 Encoding=UTF-8
 
-# define the web browser. It should be the path to a browser "with proxy" switcher
-# script or linked through /etc/alternatives. Proxy / no proxy switching should
-# happen within that script (not this one).
-
-BROWSER="x-www-browser"
-
-#startbrowser command
-startbrowser="$BROWSER"
-
 # terminal command
 TERMINAL="x-terminal-emulator"
 
@@ -48,8 +39,6 @@ Bridge ${bridgedata}" | sudo tee /etc/torrc.d/10_bridges
 systemctl enable tor.service
 sleep 4
 systemctl start tor.service
-sleep 4
-$BROWSER --new-window "https://check.torproject.org" &
 }
 
 torsnowflake(){
@@ -73,8 +62,6 @@ Bridge snowflake 192.0.2.4:80 8838024498816A039FCBBAB14E6F40A0843051FA
 systemctl enable tor.service
 sleep 4
 systemctl start tor.service
-sleep 4
-$BROWSER --new-window "https://check.torproject.org" &
 }
 
 torproxychains(){
@@ -85,8 +72,6 @@ sudo sed -i 's/^### FZPROXY.*/### FZPROXY\nsocks5 127.0.0.1 9050/;
 systemctl enable tor.service
 sleep 4
 systemctl start tor.service
-sleep 4
-$BROWSER --new-tab "https://check.torproject.org" &
 }
 
 remote_tor(){
@@ -96,8 +81,6 @@ $TERMINAL -e "tor-remote" &
 while ! [[ -f "/tmp/proxyflag" ]]; do
     sleep 1
 done
-sleep 4
-$BROWSER --new-tab "https://check.torproject.org" &
 }
 
 torstop(){

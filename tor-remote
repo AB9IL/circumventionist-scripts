@@ -57,11 +57,11 @@ start_tor_connection(){
     CHOICE="$(grep -E '^Host \w' $CONFIGFILE | awk '{print $2}' | $COMMAND2 )"
     export CHOICE
     [[ -z "$CHOICE" ]] && echo "No selection..." && stop_tor_connection && exit 1
+    notify-send "Connecting to Tor instance on $CHOICE"
     # set the proxy flag if a choice is made
     [[ -z "$CHOICE" ]] || echo "$CHOICE" > /tmp/proxyflag && \
         sh -c "while ! ssh -L 9050:127.0.0.1:9050 -t $CHOICE; do sleep 4; done"
     stop_tor_connection
-    exit 0
 }
 
 stop_tor_connection(){
@@ -79,6 +79,7 @@ stop_tor_connection(){
     export no_proxy=
     k="$(pgrep "ssh")"
     #read -r SERVER < /tmp/proxyflag
+    notify-send "Disconnecting from $(\cat /tmp/proxyflag)"
     for process in ${k[@]};do
         #sudo pkill -f "ssh -L 9050:127.0.0.1:9050 -t -t $SERVER"
         sudo killall -g ssh
