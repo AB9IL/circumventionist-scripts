@@ -25,13 +25,21 @@ CHROMIUM_I2P="$HOME/.config/i2p/chromium"
 mkdir -p "$CHROMIUM_I2P"
 
 RAISE(){
-    sudo sed -i 's/^### FZPROXY.*/### FZPROXY\nhttp 127.0.0.1 4447/' /etc/proxychains4.conf
+    sudo sed -i 's/^### FZPROXY.*/### FZPROXY\nhttp 127.0.0.1 4444/' /etc/proxychains4.conf
     sudo systemctl start i2pd.service
      /usr/bin/i2prouter start
-    echo 'http://127.0.0.1:4447' > /tmp/session_proxy
+    echo 'http://127.0.0.1:4444' > /tmp/session_proxy
+     i2pbrowse
+}
+
+DROP(){
+    sudo systemctl stop i2pd.service
+}
+
+i2pbrowse(){
     $startbrowser \
       --user-data-dir="$CHROMIUM_I2P" \
-      --proxy-server='http://127.0.0.1:4447' \
+      --proxy-server='http://127.0.0.1:4444' \
       --safebrowsing-disable-download-protection \
       --disable-client-side-phishing-detection \
       --disable-3d-apis \
@@ -50,18 +58,15 @@ RAISE(){
       --proxy-bypass-list=127.0.0.1:7070 \
       --new-window 'http://127.0.0.1:7070'
 }
-DROP(){
-    sudo systemctl stop i2pd.service
-}
 
 i2pstart(){
 touch /tmp/proxyflag
-export https_proxy=127.0.0.1:4447
-export HTTPS_PROXY=127.0.0.1:4447
-export http_proxy=127.0.0.1:4447
-export HTTP_PROXY=127.0.0.1:4447
-#export socks_proxy=127.0.0.1:14447
-#export SOCKS_PROXY=127.0.0.1:14447
+export https_proxy=127.0.0.1:4444
+export HTTPS_PROXY=127.0.0.1:4444
+export http_proxy=127.0.0.1:4444
+export HTTP_PROXY=127.0.0.1:4444
+#export socks_proxy=127.0.0.1:14444
+#export SOCKS_PROXY=127.0.0.1:14444
 export NO_PROXY='localhost, 127.0.0.1'
 export no_proxy='localhost, 127.0.0.1'
 RAISE &
@@ -93,7 +98,7 @@ showhelp() {
 Use I2P to hidden services via garlic routing.
 
 Note:  You may use proxychains to wrap your I2P-using
-         apps. The proxy is on address 127.0.0.1:4447
+         apps. The proxy is on address 127.0.0.1:4444
 
 Usage: $0 <option>
 Options:    --gui   Graphical user interface.
@@ -103,7 +108,7 @@ Options:    --gui   Graphical user interface.
 # index of commands
 ROFI_COMMAND1=' rofi \
     -dmenu -p "Manage I2P" \
-    -l 2'
+    -l 3'
 
 FZF_COMMAND1='fzf --layout=reverse'
 
@@ -120,6 +125,7 @@ case "$1" in
 esac
 
 OPTIONS="Start I2P and configure proxy settings
+Open web browser (I2P already running)
 Stop I2P and restore proxy settings"
 
 # Take the choice; exit if no answer matches options.
@@ -127,4 +133,5 @@ REPLY="$(echo -e "$OPTIONS" | $COMMAND1 )"
 
 [[ -z "$REPLY" ]] && exit 1
 [[  "$REPLY" == "Start I2P and configure proxy settings" ]] && i2pstart
+[[  "$REPLY" == "Open web browser (I2P already running)" ]] && i2pbrowse
 [[  "$REPLY" == "Stop I2P and restore proxy settings" ]] && i2pstop
