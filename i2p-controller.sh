@@ -15,14 +15,46 @@ Encoding=UTF-8
 # terminal command
 TERMINAL="x-terminal-emulator"
 
-# define the web browser (brave-browser, brave-browser-beta, firefox, vivaldi,
-# chromium, x-www-browser)
-startbrowser="chromium"
+# commandline arguments for Firefox and similar Gecko based browsers
+ARGS_1=(--proxy socks5:127.0.0.1:4444 --new-window "http://127.0.0.1:7070")
 
+# commandline arguments for Brave, Chromium, Vivaldi, and similar browsers
 # chromium parameters from:
 # https://github.com/eyedeekay/I2P-Configuration-For-Chromium
 CHROMIUM_I2P="$HOME/.config/i2p/chromium"
-mkdir -p "$CHROMIUM_I2P"
+[ -d "$CHROMIUM_I2P" ] || mkdir -p "$CHROMIUM_I2P"
+
+ARGS_2=(--user-data-dir="$CHROMIUM_I2P" \
+    --proxy-server="socks5://127.0.0.1:4444" \
+    --safebrowsing-disable-download-protection \
+    --disable-client-side-phishing-detection \
+    --disable-3d-apis \
+    --disable-accelerated-2d-canvas \
+    --disable-remote-fonts \
+    --disable-sync-preferences \
+    --disable-sync \
+    --disable-speech \
+    --disable-webgl \
+    --disable-reading-from-canvas \
+    --disable-gpu \
+    --disable-auto-reload \
+    --disable-background-networking \
+    --disable-d3d11 \
+    --disable-file-system "$@" \
+    --proxy-bypass-list=127.0.0.1:7070 \
+    --new-window "http://127.0.0.1:7070")
+
+# define the web browser (brave-browser, brave-browser-beta, firefox, vivaldi,
+# chromium, x-www-browser)
+startbrowser="vivaldi"
+
+# Set the proper arguments for the browser
+ARGS=${ARGS_2[*]}
+
+
+################################################################################
+#  BEWARE OF DRAGONS BELOW!!
+################################################################################
 
 RAISE(){
     sudo sed -i 's/^### FZPROXY.*/### FZPROXY\nhttp 127.0.0.1 4444/' /etc/proxychains4.conf
@@ -37,26 +69,7 @@ DROP(){
 }
 
 i2pbrowse(){
-    $startbrowser \
-      --user-data-dir="$CHROMIUM_I2P" \
-      --proxy-server='http://127.0.0.1:4444' \
-      --safebrowsing-disable-download-protection \
-      --disable-client-side-phishing-detection \
-      --disable-3d-apis \
-      --disable-accelerated-2d-canvas \
-      --disable-remote-fonts \
-      --disable-sync-preferences \
-      --disable-sync \
-      --disable-speech \
-      --disable-webgl \
-      --disable-reading-from-canvas \
-      --disable-gpu \
-      --disable-auto-reload \
-      --disable-background-networking \
-      --disable-d3d11 \
-      --disable-file-system "$@" \
-      --proxy-bypass-list=127.0.0.1:7070 \
-      --new-window 'http://127.0.0.1:7070'
+    ${startbrowser} ${ARGS}
 }
 
 i2pstart(){
