@@ -237,11 +237,17 @@ Note 2:  Use tor-remote if tunneling vis ssh to a remote tor instance.
 
 Usage: $0 <option>
 Options:    --gui     Graphical user interface.
-            --help  This help screen.\n"
+            --help    This help screen.\n"
+}
+
+torrecycle(){
+    systemctl stop tor.service
+    sleep 2
+    systemctl start tor.service
 }
 
 # index of commands
-ROFI_COMMAND1='rofi -dmenu -p Select -l 7'
+ROFI_COMMAND1='rofi -dmenu -p Select -l 8'
 FZF_COMMAND1='fzf --layout=reverse'
 ROFI_COMMAND2='rofi -dmenu -p Select -l 3'
 FZF_COMMAND2='fzf --layout=reverse --header=Select:'
@@ -273,6 +279,7 @@ OPTIONS="Tor-Remote to a distant server
 Start Tor and use Obfs4 or Scramblesuit
 Start Tor and use Proxychains
 Start Tor and use Snowflake
+Recycle Tor Connection
 Open Web Browser
 Update Proxy List
 Stop Tor"
@@ -292,6 +299,7 @@ message body.'  \
             --entry="Enter Pluggable Transport Data:") && torobfs4
 [[ "$REPLY" == "Start Tor and use Proxychains" ]] && torproxychains
 [[ "$REPLY" == "Start Tor and use Snowflake" ]] && torsnowflake
+[[ "$REPLY" == "Recycle Tor Connection" ]] && torrecycle
 [[ "$REPLY" == "Open Web Browser" ]] && torbrowse
 [[ "$REPLY" == "Tor-Remote to a distant server" ]] && remote_tor
 [[ "$REPLY" == "Update Proxy List" ]] && update_proxylist

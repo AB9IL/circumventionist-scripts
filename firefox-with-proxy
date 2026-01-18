@@ -11,12 +11,12 @@
 args="$1 $2"
 BROWSER="firefox"
 
-# If proxychains is available, use it. Otherwise, use torsocks.
-[ -z "$(which proxychains)" ] && PROXY="torsocks"|| PROXY="proxychains"
+# For Gecko-based browsers (Firefox), use the --proxy argument.
+# Get the ip and port from /tmp/session_proxy
 
 run_proxied() {
     # operate in proxied mode
-    ${PROXY} ${BROWSER} --new-tab ${args} &
+    ${BROWSER} --proxy "$(cat /tmp/session_proxy)"  --new-tab ${args} &
     exit 0
 }
 
