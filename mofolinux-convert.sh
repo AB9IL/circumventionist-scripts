@@ -401,14 +401,14 @@ printf "\nDownloading dot files"
         cp -r "$DIR" /home/"$USERNAME"/
     done
 
-    FILES=".bashrc .fzf.bash .inputrc .nanorc .tmux.conf \
+    FILES=".bashrc .fzf.bash .inputrc .nanorc \
         .vimrc .wgetrc .Xresources"
     for FILE in $FILES; do
         cp "$FILE" /home/"$USERNAME"/
     done
 
     FOLDERS="alacritty dconf castero dunst networkmanager-dmenu newsboat \
-        picom rofi wezterm sxhkd systemd zathura"
+        picom rofi tmux wezterm sxhkd systemd zathura"
     for FOLDER in $FOLDERS; do
         cp -r "$FOLDER" /home/"$USERNAME"/.config/"$FOLDER"
     done
